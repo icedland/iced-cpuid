@@ -1,0 +1,55 @@
+name: GitHub CI
+on:
+  push:
+    paths:
+      - ".github/workflows/build.yml"
+      - "Cargo.toml"
+      - "src/**"
+      - "!**/*.md"
+    branches:
+      - main
+  pull_request:
+    paths:
+      - "Cargo.toml"
+      - "src/**"
+      - "!**/*.md"
+    branches:
+      - main
+
+jobs:
+  build-rust:
+    name: Build
+    runs-on: ${{matrix.os}}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+
+    steps:
+      - uses: actions/checkout@v2.3.4
+
+      - name: Install Rust
+        shell: bash
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+          rustup update
+          rustc --version
+          cargo --version
+
+      - name: Check
+        shell: bash
+        run: |
+          echo "==== FORMAT CHECK ===="
+          cargo fmt -- --color always --check
+          echo "==== BUILD RELEASE ===="
+          cargo build --color always --release
+
+      - name: Upload to crates.io
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: bash
+        run: |
+          git reset .
+          git checkout .
+          git clean -xdf
+          cargo login --color always -- "${{secrets.CRATES_IO_TOKEN}}"
+          # --no-verify: we've tested building everything already
+          cargo publish --color always --no-verify
