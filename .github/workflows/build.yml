@@ -31,6 +31,11 @@ jobs:
         shell: bash
         run: |
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+          echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
+
+      - name: Rust info
+        shell: bash
+        run: |
           rustup update
           rustc --version
           cargo --version
