@@ -2,7 +2,14 @@
 name = "iced-cpuid"
 version = "1.0.0"
 edition = "2018"
+license = "MIT"
 description = "Shows CPUID features and instruction encodings used by x86/x64 binaries"
+homepage = "https://github.com/icedland/iced-cpuid"
+repository = "https://github.com/icedland/iced-cpuid"
+readme = "README.md"
+# At most 5 keywords can be used
+keywords = ["cpuid", "disassembler", "x86", "amd64", "x86_64"]
+categories = ["development-tools::debugging", "encoding", "hardware-support"]
 
 [dependencies]
 anyhow = "1.0.41"
