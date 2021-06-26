@@ -174,15 +174,16 @@ fn should_ignore_cpuid(cpuid: CpuidFeature) -> bool {
 			| CpuidFeature::INTEL386_A0_ONLY
 			| CpuidFeature::INTEL486
 			| CpuidFeature::INTEL486_A_ONLY
+			| CpuidFeature::X64
+			| CpuidFeature::CPUID
 			| CpuidFeature::FPU
 			| CpuidFeature::FPU287
 			| CpuidFeature::FPU287XL_ONLY
 			| CpuidFeature::FPU387
 			| CpuidFeature::FPU387SL_ONLY
 			| CpuidFeature::MULTIBYTENOP
-			| CpuidFeature::X64
-			| CpuidFeature::CPUID
 			| CpuidFeature::PAUSE
 			| CpuidFeature::RDPMC
+			| CpuidFeature::SMM
 	)
 }
