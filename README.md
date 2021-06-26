@@ -1,4 +1,4 @@
-# iced-cpuid [![GitHub builds](https://github.com/icedland/iced-cpuid/workflows/GitHub%20CI/badge.svg)](https://github.com/icedland/iced-cpuid/actions)
+# iced-cpuid [![crates.io](https://img.shields.io/crates/v/iced-cpuid.svg)](https://crates.io/crates/iced-cpuid) [![GitHub builds](https://github.com/icedland/iced-cpuid/workflows/GitHub%20CI/badge.svg)](https://github.com/icedland/iced-cpuid/actions)
 
 Shows CPUID features and instruction encodings used by x86/x64 binaries.
 
