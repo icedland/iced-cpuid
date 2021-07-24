@@ -4,6 +4,7 @@
 use anyhow::Context;
 use hashbrown::HashMap;
 use iced_x86::{Code, CpuidFeature, Decoder, DecoderOptions, Instruction};
+use memmap::Mmap;
 use object::{File, Object, ObjectSection, SectionKind};
 use std::fs;
 use std::path::PathBuf;
@@ -59,8 +60,9 @@ fn main() -> anyhow::Result<()> {
 	let cmd = CommandLineOptions::from_args();
 	let show_more_info = cmd.instr || cmd.opcode;
 
-	let data = fs::read(&cmd.filename).context(format!("Couldn't open `{}`", cmd.filename.to_string_lossy()))?;
-	let file = File::parse(data.as_slice()).context(format!("Couldn't read `{}`", cmd.filename.to_string_lossy()))?;
+	let data = fs::File::open(&cmd.filename).with_context(|| format!("Couldn't open `{}`", cmd.filename.to_string_lossy()))?;
+	let mmap = unsafe { Mmap::map(&data)? };
+	let file = File::parse(&*mmap).with_context(|| format!("Couldn't read `{}`", cmd.filename.to_string_lossy()))?;
 
 	let mut all_cpuid1: Vec<(CpuidFeature, CpuidInfo)> = CpuidFeature::values().map(|f| (f, CpuidInfo::default())).collect();
 	let mut all_cpuidn: HashMap<Vec<CpuidFeature>, CpuidInfo> = HashMap::new();
@@ -68,11 +70,9 @@ fn main() -> anyhow::Result<()> {
 	let mut total_instrs = 0;
 	for section in file.sections().filter(|s| s.kind() == SectionKind::Text) {
 		let decoder_options = if cmd.mpx { DecoderOptions::MPX } else { DecoderOptions::NONE };
-		let section_data = section.data().context(format!(
-			"Couldn't get section data, section `{}` index {}",
-			section.name().unwrap_or_default(),
-			section.index().0
-		))?;
+		let section_data = section
+			.data()
+			.with_context(|| format!("Couldn't get section data, section `{}` index {}", section.name().unwrap_or_default(), section.index().0))?;
 		let section_address = file.relative_address_base() + section.address();
 		let mut decoder = Decoder::with_ip(bitness, section_data, section_address, decoder_options);
 		let mut instr = Instruction::default();
@@ -161,7 +161,7 @@ fn main() -> anyhow::Result<()> {
 	Ok(())
 }
 
-fn should_ignore_cpuid(cpuid: CpuidFeature) -> bool {
+const fn should_ignore_cpuid(cpuid: CpuidFeature) -> bool {
 	matches!(
 		cpuid,
 		CpuidFeature::INTEL8086

@@ -17,6 +17,7 @@ hashbrown = "0.11.2"
 iced-x86 = { version = "1.12.0", default-features = false, features = ["std", "decoder", "instr_info", "op_code_info"] }
 object = "0.25.3"
 structopt = "0.3.21"
+memmap = "0.7.0"
 
 [profile.release]
 codegen-units = 1 
