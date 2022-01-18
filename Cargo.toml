@@ -13,7 +13,7 @@ categories = ["development-tools::debugging", "encoding", "hardware-support"]
 
 [dependencies]
 anyhow = "1.0.41"
-hashbrown = "0.11.2"
+hashbrown = "0.12.0"
 iced-x86 = { version = "1.12.0", default-features = false, features = ["std", "decoder", "instr_info", "op_code_info"] }
 object = "0.28.1"
 structopt = "0.3.21"
