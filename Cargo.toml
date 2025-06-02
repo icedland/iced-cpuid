@@ -15,7 +15,7 @@ categories = ["development-tools::debugging", "encoding", "hardware-support"]
 anyhow = "1.0.55"
 hashbrown = "0.15.1"
 iced-x86 = { version = "1.17.0", default-features = false, features = ["std", "decoder", "instr_info", "op_code_info"] }
-object = "0.36.2"
+object = "0.37.0"
 structopt = "0.3.26"
 
 [profile.release]
